@@ -19,9 +19,7 @@ jobs:
       with:
         node-version: 16.19
     # 配置依赖缓存
-    - name: yarn cache
-      id: yarn-chache-dir-path
-      run: echo "::set-output name=dir::$(yarn cache dir)"+
+    - name: build
 #    - uses: actions/cache@3
 #      id: yarn-cache
 #      with:
@@ -29,11 +27,16 @@ jobs:
 #        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
 #        restore-keys: |
 #          ${{ runner.os }}-yarn-
-    - run: yarn install && npm run build
+    - run: yarn install && npm run build && pwd
+
 
     # deploy
-    - name: deploy
-      uses: JamesIves/github-pages-deploy-action@v4.2.3
+    - name: package
+      uses: actions/upload-pages-artifact
       with:
-        branch: github_pages_deploy
-        folder: dist
+        name: case-workbench-front
+        path: ./dist
+    - name: deploy
+      uses: actions/deploy-pages
+      with:
+        artifact_name: case-workbench-front
