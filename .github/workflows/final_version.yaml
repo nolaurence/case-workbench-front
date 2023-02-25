@@ -1,0 +1,43 @@
+name: NodeJS with Webpack
+
+on:
+  push:
+    branches: [ "release" ]
+  pull_request:
+    branches: [ "release" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [14.x 16.x 18.x]
+
+    steps:
+    - name: checkout code
+      uses: actions/checkout@v3
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+    # 配置依赖缓存
+    - name: yarn cache
+      id: yarn-chache-dir-path
+      run: echo "::set-output name=dir::$(yarn cache dir)"+
+    - uses: actions/cache@2
+      id: yarn-cache
+      with:
+        path: ${{ steps.yarn-cahce-dir-path.outputs.dir }}
+        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+        restore-keys: | 
+          ${{ runner.os }}-yarn-
+    - run: yarn install && npm run build
+
+    # deploy
+    - name: deploy
+      uses: JamesIves/github-pages-deploy-action@v4.2.3
+      with:
+        branch: github_pages_deploy
+        folder: dist
