@@ -32,11 +32,11 @@ jobs:
 
     # deploy
     - name: package
-      uses: actions/upload-pages-artifact
+      uses: actions/upload-pages-artifact@1
       with:
         name: case-workbench-front
         path: ./dist
     - name: deploy
       uses: actions/deploy-pages
       with:
-        artifact_name: case-workbench-front
+        artifact_name: case-workbench-front@1
