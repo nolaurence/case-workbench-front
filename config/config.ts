@@ -13,6 +13,8 @@ export default defineConfig({
    * 根据运行时的publicPath判断构建产物的路径
    */
   runtimePublicPath: {},
+
+  publicPath: 'https://case-workbench-assets.nolaurence.cn/',
   /**
    * @name 路由模式指定为hash模式
    */
